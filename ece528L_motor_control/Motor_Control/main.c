@@ -31,7 +31,7 @@ uint32_t SysTick_ms_elapsed = 0;
 
 // Global flag that gets set in Bumper_Switches_Handler.
 // This is used to detect if any collisions occurred when any one of the bumper switches are pressed.
-uint8_t collision_detected = 0;
+volatile uint8_t collision_detected = 0;
 
 /**
  * @brief Interrupt service routine for the SysTick timer.
@@ -81,6 +81,12 @@ void SysTick_Handler(void)
 void Bumper_Switches_Handler(uint8_t bumper_switch_state)
 {
     printf("Collision Detected! Bumper Switch State: 0x%02X\n", bumper_switch_state);
+    P8->OUT |= 0x80;
+
+    if (collision_detected == 0)
+    {
+        collision_detected = 1;
+    }
 }
 
 /**
@@ -140,7 +146,7 @@ void Drive_Pattern_1()
 }
 
 /**
- * @brief
+ * @brief Execute the required collision recovery sequence.
  *
  * @param None
  *
@@ -149,37 +155,27 @@ void Drive_Pattern_1()
 void Handle_Collision()
 {
     // Stop the motors
+    Motor_Stop();
 
+    Clock_Delay1ms(2000);
 
-    // Make a function call to Clock_Delay1ms(2000)
+    Motor_Backward(4500, 4500);
 
+    Clock_Delay1ms(2000);
 
-    // Move the motors backward with 30% duty cycle
+    Motor_Stop();
 
+    Clock_Delay1ms(1000);
 
-    // Make a function call to Clock_Delay1ms(2000)
+    Motor_Right(1500, 1500);
 
+    Clock_Delay1ms(4000);
 
-    // Stop the motors
+    Motor_Stop();
 
+    Clock_Delay1ms(2000);
 
-    // Make a function call to Clock_Delay1ms(1000)
-
-
-    // Make the robot turn to the right with 10% duty cycle
-
-
-    // Make a function call to Clock_Delay1ms(4000)
-
-
-    // Stop the motors
-
-
-    // Make a function call to Clock_Delay1ms(2000)
-
-
-    // Set the collision_detected flag to 0
-
+    collision_detected = 0;
 }
 
 int main(void)
@@ -208,10 +204,10 @@ int main(void)
     Timer_A2_PWM_Init(TIMER_A2_PERIOD_CONSTANT, 0, 0);
 
     // Initialize the bumper switches which will be used to generate external I/O-triggered in
-    Bumper_Switches_Init(&Bumper_Switches_Handler);
+    // Bumper_Switches_Init(&Bumper_Switches_Handler); uncomment while demonstrating
 
     // Initialize the DC motors
-    Motor_Init();
+    // Motor_Init(); uncomment while demonstrating
 
     // Enable the interrupts used by the SysTick and Timer A1 timers
     EnableInterrupts();
@@ -230,15 +226,13 @@ int main(void)
 //        LED2_Output(RGB_LED_BLUE);
 //        Clock_Delay1ms(3000);
 
-//        Drive_Pattern_1();
-
-//        if (collision_detected == 1)
-//        {
-//            Handle_Collision();
-//        }
-//        else
-//        {
-//            Motor_Forward(4500, 4500);
-//        }
+        if (collision_detected == 1)
+        {
+            Handle_Collision();
+        }
+        else
+        {
+            Motor_Forward(4500, 4500);
+        }
     }
 }

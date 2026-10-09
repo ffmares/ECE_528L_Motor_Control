@@ -24,13 +24,13 @@
 #define TIMER_A0_PERIOD_CONSTANT 15000
 
 /**
- * @brief
+ * @brief Initialize Timer A0 to generate two motor PWM signals.
  *
- * @param period_constant
+ * @param period_constant The PWM period constant.
  *
- * @param duty_cycle_1
+ * @param duty_cycle_1 The duty cycle for the PWM signal on P2.6 (CCR[3]).
  *
- * @param duty_cycle_2
+ * @param duty_cycle_2 The duty cycle for the PWM signal on P2.7 (CCR[4]).
  *
  * @return None
  */

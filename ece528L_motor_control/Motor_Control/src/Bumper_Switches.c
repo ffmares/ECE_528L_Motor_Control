@@ -30,6 +30,9 @@
 
 #include "../inc/Bumper_Switches.h"
 
+static const uint8_t bumper = 0xED;
+void (*Bumper_Task)(uint8_t bumper_switch_state) = 0;
+
 void Bumper_Switches_Init(void(*task)(uint8_t))
 {
     // Store the user-defined task function for use during interrupt handling
@@ -37,36 +40,37 @@ void Bumper_Switches_Init(void(*task)(uint8_t))
 
     // Configure the following pins as GPIO pins: P4.7, P4.6, P4.5, P4.3, P4.2, and P4.0
     // by clearing the corresponding bits in the SEL0 and SEL1 registers
-
+    P4->SEL0 &= ~bumper;
+    P4->SEL1 &= ~bumper;
 
 
     // Set the direction of the following pins as input: P4.7, P4.6, P4.5, P4.3, P4.2, and P4.0
     // by clearing the corresponding bits in the DIR register
-
+    P4->DIR &= ~bumper;
 
     // Enable pull-up resistors on the following pins: P4.7, P4.6, P4.5, P4.3, P4.2, and P4.0
     // by setting the corresponding bits in the REN register
-
+    P4->REN |= bumper;
 
     // Ensure that the pins are pulled up: P4.7, P4.6, P4.5, P4.3, P4.2, and P4.0
     // by setting the corresponding bits in the OUT register
-
+    P4->OUT |= bumper;
 
     // Interrupt Edge Select: High-to-Low Transition
     // Configure the pins to use falling edge event triggers: P4.7, P4.6, P4.5, P4.3, P4.2, and P4.0
     // by setting the corresponding bits in the IES register
-
+    P4->IES |= bumper;
 
     // Clear any existing interrupt flags on the following pins: P4.7, P4.6, P4.5, P4.3, P4.2, and P4.0
     // by clearing the corresponding bits in the IFG register
-
+    P4->IFG &= ~bumper;
 
     // Enable interrupts on the following pins: P4.7 - P4.5, P4.3, P4.2, and P4.0
     // by setting the corresponding bits in the IE register
-
+    P4->IE |= bumper;
 
     // Set the priority level of the interrupts (IRQ 38) to 0 (section 2.4.3.20)
-    NVIC->IP[9] = (NVIC->IP[9] & 0xFF0FFFFF);
+    NVIC->IP[9] &= 0xFF0FFFFF;
 
     // Enable Interrupt 38 in NVIC (section 2.4.3.2)
     // Bit 6 corresponds to IRQ 38

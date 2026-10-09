@@ -19,7 +19,7 @@
 #include "../inc/Timer_A0_PWM.h"
 
 /**
- * @brief
+ * @brief Initialize the motor direction, enable, and PWM control pins.
  *
  * @param None
  *
@@ -56,22 +56,22 @@ void Motor_Forward(uint16_t left_duty_cycle, uint16_t right_duty_cycle);
 void Motor_Backward(uint16_t left_duty_cycle, uint16_t right_duty_cycle);
 
 /**
- * @brief
+ * @brief Turn the robot left using the specified left and right duty cycles.
  *
- * @param left_duty_cycle
+ * @param left_duty_cycle The duty cycle for the left motor (0-99%).
  *
- * @param right_duty_cycle
+ * @param right_duty_cycle The duty cycle for the right motor (0-99%).
  *
  * @return None
  */
 void Motor_Left(uint16_t left_duty_cycle, uint16_t right_duty_cycle);
 
 /**
- * @brief
+ * @brief Turn the robot right using the specified left and right duty cycles.
  *
- * @param left_duty_cycle
+ * @param left_duty_cycle The duty cycle for the left motor (0-99%).
  *
- * @param right_duty_cycle
+ * @param right_duty_cycle The duty cycle for the right motor (0-99%).
  *
  * @return None
  */
