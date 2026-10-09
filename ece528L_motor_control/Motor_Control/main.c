@@ -83,10 +83,10 @@ void Bumper_Switches_Handler(uint8_t bumper_switch_state)
     printf("Collision Detected! Bumper Switch State: 0x%02X\n", bumper_switch_state);
     P8->OUT |= 0x80;
 
-    if (collision_detected == 0)
-    {
-        collision_detected = 1;
-    }
+//    if (collision_detected == 0)
+//    {
+//        collision_detected = 1;
+//    }
 }
 
 /**
@@ -180,6 +180,7 @@ void Handle_Collision()
 
 int main(void)
 {
+
     // Initialize the 48 MHz Clock
     Clock_Init48MHz();
 
@@ -204,10 +205,10 @@ int main(void)
     Timer_A2_PWM_Init(TIMER_A2_PERIOD_CONSTANT, 0, 0);
 
     // Initialize the bumper switches which will be used to generate external I/O-triggered in
-    // Bumper_Switches_Init(&Bumper_Switches_Handler); uncomment while demonstrating
+    Bumper_Switches_Init(&Bumper_Switches_Handler);
 
     // Initialize the DC motors
-    // Motor_Init(); uncomment while demonstrating
+    Motor_Init();
 
     // Enable the interrupts used by the SysTick and Timer A1 timers
     EnableInterrupts();
